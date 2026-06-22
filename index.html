@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saifi Buroq | Full-Stack Developer & UI/UX Designer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            dark: '#f8fafc',       /* Latar belakang siber terang (slate-50) */
+                            darker: '#e2e8f0',     /* Aksen siber terang (slate-200) */
+                            blue: '#0284c7',       /* Biru siber yang kontras & terbaca di latar terang */
+                            purple: '#7c3aed',     /* Ungu siber */
+                            pink: '#db2777',       /* Pink siber */
+                            indigo: '#2563eb',     /* Indigo siber */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f1f5f9; /* Transisi warna dasar icy-blue yang segar */
+            color: #1e293b; /* Warna teks gelap siber untuk keterbacaan tingkat tinggi */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Terang */
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 24px 0 rgba(31, 38, 135, 0.03);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(37, 99, 235, 0.2);
+            box-shadow: 0 15px 35px -10px rgba(37, 99, 235, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Glow effects untuk tema terang */
+        .glow-text-cyan {
+            text-shadow: 0 0 10px rgba(2, 132, 199, 0.15), 0 0 20px rgba(2, 132, 199, 0.05);
+        }
+
+        .glow-text-pink {
+            text-shadow: 0 0 10px rgba(219, 39, 119, 0.15), 0 0 20px rgba(219, 39, 119, 0.05);
+        }
+
+        .glow-border {
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.08);
+        }
+
+        .glow-border:hover {
+            box-shadow: 0 0 25px rgba(2, 132, 199, 0.2);
+        }
+
+        /* Scrollbar custom bertema es */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(37, 99, 235, 0.2);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(219, 39, 119, 0.4);
+        }
+
+        /* Utility pembersih scrollbar horizontal */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animasi Melayang */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        #interactive-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- Interactive Background Canvas (Plexus Effect) -->
+    <canvas id="interactive-canvas"></canvas>
+
+    <!-- UI Overlay Base Container -->
+    <div class="relative z-10 w-full min-h-screen flex flex-col justify-between">
+
+        <!-- Navigation Header (Menu Selalu Terlihat Sejajar Tanpa Hamburger) -->
+        <header class="sticky top-0 w-full z-50 px-2 sm:px-4 py-3 lg:px-8">
+            <nav class="max-w-7xl mx-auto glass rounded-2xl px-3 sm:px-6 py-3 flex items-center justify-between shadow-sm gap-2" style="background: rgba(255, 255, 255, 0.5) !important;">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-1.5 sm:gap-2 group shrink-0">
+                    <span class="font-extrabold text-xs sm:text-base md:text-xl tracking-wider text-slate-900">
+                        SAIFI<span class="text-cyber-blue hidden min-[400px]:inline">BUROQ</span>
+                    </span>
+                </a>
+
+                <!-- Universal Inline Navigation (Selalu Sejajar tanpa Tombol Hamburger) -->
+                <div class="flex items-center gap-1 min-[360px]:gap-2 sm:gap-4 ml-auto overflow-x-auto no-scrollbar py-0.5">
+                    <a href="#about" class="px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] min-[360px]:text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">Tentang</a>
+                    <a href="#services" class="px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] min-[360px]:text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">Layanan</a>
+                    <a href="#portfolio" class="px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] min-[360px]:text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">Portofolio</a>
+                    <a href="#contact" class="px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] min-[360px]:text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">Kontak</a>
+                    <a href="#cyber-game" class="px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] min-[360px]:text-xs sm:text-sm font-extrabold bg-gradient-to-r from-cyber-blue to-cyber-indigo text-white shadow-md hover:shadow-sky-500/10 transition-all duration-300 transform active:scale-95 whitespace-nowrap flex items-center gap-1">
+                        <i class="fa-solid fa-gamepad text-[10px] min-[360px]:text-xs"></i>
+                        <span class="hidden md:inline">Mini Game</span>
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="w-full max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-24 md:space-y-36">
+
+            <!-- HERO SECTION -->
+            <section id="hero" class="min-h-[80vh] flex flex-col lg:flex-row items-center justify-between gap-12 py-10">
+                <!-- Hero Left text -->
+                <div class="flex-1 space-y-6 text-center lg:text-left z-10">
+                    <div class="inline-flex items-center">
+                    </div>
+                    <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 leading-tight">
+                        Hai, Saya Sevi Saifi Buroq <br>
+                    </h2>
+                    <p class="text-slate-600 max-w-xl text-base sm:text-lg mx-auto lg:mx-0">
+                        Saya adalah Mahasiswa Teknik Informatika yang berfokus membangun antarmuka web modern, interaktif, fungsional, dan memberikan pengalaman pengguna.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#portfolio" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyber-blue to-cyber-indigo text-white font-bold tracking-wide shadow-lg hover:shadow-sky-500/25 hover:translate-y-[-2px] transition-all transform active:scale-95">
+                            Lihat Karya Saya <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#contact" class="px-8 py-4 rounded-xl glass border border-slate-200 text-slate-800 font-bold tracking-wide hover:bg-white/50 hover:border-slate-300 transition-all transform active:scale-95">
+                            Diskusi Proyek
+                        </a>
+                    </div>
+                    <!-- Stats Badges -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 max-w-md mx-auto lg:mx-0">
+                        <div class="text-center lg:text-left">
+                            <h3 class="text-3xl font-extrabold text-slate-900">1+</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Tahun Pengalaman</p>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <h3 class="text-3xl font-extrabold text-slate-900">8+</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Proyek Selesai</p>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <h3 class="text-3xl font-extrabold text-slate-900">80%</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Kepuasan Klien</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Visual: Cool futuristic glowing Profile Photo -->
+                <div class="flex-1 flex justify-center z-10 animate-float">
+                    <div class="relative w-full max-w-[380px] sm:max-w-[420px] aspect-square rounded-3xl p-1 bg-gradient-to-tr from-cyber-blue via-cyber-purple to-cyber-pink shadow-xl">
+                        <div class="w-full h-full rounded-[22px] overflow-hidden bg-white/70 backdrop-blur-md relative group">
+                            <!-- Cool smart tech professional portrait -->
+                            <img src="sevi.jpeg" alt="Reza Aditya" class="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 transition-transform duration-700 ease-out" onerror="this.onerror=null; this.src='https://placehold.co/600x600/0284c7/ffffff?text=Reza+Aditya';">
+                            
+                            <!-- Semi-dark overlay for better contrast -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent opacity-80 pointer-events-none"></div>
+
+                            <!-- Floating Active Indicator -->
+                            <div class="absolute top-4 left-4 glass px-3.5 py-1.5 rounded-full border border-emerald-500/30 flex items-center gap-2 shadow-md">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                <span class="text-[10px] font-mono tracking-wider font-extrabold text-slate-800">ONLINE</span>
+                            </div>
+
+                            <!-- Rotating Cyber Deco Atom Ring -->
+                            <div class="absolute top-4 right-4 w-9 h-9 rounded-full glass border border-cyber-blue/30 flex items-center justify-center text-cyber-blue text-xs shadow-md animate-spin" style="animation-duration: 10s;">
+                                <i class="fa-solid fa-atom"></i>
+                            </div>
+
+                            <!-- Bottom Floating Identity Tag -->
+                            <div class="absolute bottom-4 left-4 right-4 glass p-4 rounded-2xl border border-white/40 shadow-lg flex items-center justify-between backdrop-blur-lg">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-blue to-cyber-indigo flex items-center justify-center text-white text-sm shadow-md">
+                                        <i class="fa-solid fa-shield-halved animate-pulse"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <h4 class="text-sm font-extrabold text-slate-900 leading-tight">Sevi Saifi Buroq</h4>
+                                        <p class="text-[10px] text-cyber-blue font-mono font-bold">CORE_ARCHITECT.EXE</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono font-extrabold bg-cyber-pink/10 text-cyber-pink px-2.5 py-1 rounded-lg border border-cyber-pink/20">v2.6.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT SECTION -->
+            <section id="about" class="space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-blue">Tentang Saya</h3>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Keunggulan di balik setiap kode</h2>
+                    <p class="text-slate-600">Mengkombinasikan kecerdasan pemrograman dengan estetika visual untuk merancang platform web luar biasa.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <!-- Bio Glass Panel -->
+                    <div class="glass p-8 rounded-3xl space-y-6">
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-user-gear text-cyber-purple"></i>
+                            Siapa Saya Sebenarnya?
+                        </h3>
+                        <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                            Saya adalah mahasiswa aktif jurusan Teknik Informatika, Fakultas Ilmu Komputer di Universitas Pamulang. Memiliki ketertarikan kuat dalam dunia teknologi, pengembangan perangkat lunak, dan pemecahan masalah lewat baris kode. Portofolio ini adalah ruang di mana saya membagikan perjalanan, proyek nyata, dan keterampilan yang terus saya kembangkan. Saya selalu terbuka untuk kesempatan magang, kolaborasi proyek, dan diskusi seputar teknologi baru.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                            Tujuan utama saya adalah menyederhanakan tantangan teknologi yang kompleks menjadi solusi web interaktif yang intuitif, cepat, aman, dan mudah dikelola oleh klien.
+                        </p>
+                        <div class="pt-4 flex flex-wrap gap-4">
+                            <span class="px-4 py-2 rounded-xl bg-white/60 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700">
+                                <i class="fa-solid fa-code text-cyber-blue mr-2"></i>Clean Code
+                            </span>
+                            <span class="px-4 py-2 rounded-xl bg-white/60 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700">
+                                <i class="fa-solid fa-gauge-high text-cyber-pink mr-2"></i>Performance SEO
+                            </span>
+                            <span class="px-4 py-2 rounded-xl bg-white/60 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700">
+                                <i class="fa-solid fa-mobile-screen-button text-cyber-purple mr-2"></i>Responsive Grid
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Skills Matrix -->
+                    <div class="glass p-8 rounded-3xl space-y-6">
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-laptop-code text-cyber-pink"></i>
+                            Tech Stack & Keahlian
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Skill 1 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-slate-700">HTML5, CSS3 & Tailwind CSS</span>
+                                    <span class="text-cyber-blue font-bold">95%</span>
+                                </div>
+                                <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-cyber-blue to-cyber-indigo rounded-full" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <!-- Skill 2 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-slate-700">JavaScript (ES6+) & ReactJS</span>
+                                    <span class="text-cyber-purple font-bold">90%</span>
+                                </div>
+                                <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-cyber-purple to-cyber-pink rounded-full" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <!-- Skill 3 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-slate-700">Backend (NodeJS, PHP & Express)</span>
+                                    <span class="text-cyber-pink font-bold">85%</span>
+                                </div>
+                                <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-cyber-pink to-cyber-blue rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <!-- Skill 4 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="font-bold text-slate-700">Database & API Integrasi (MySQL, MongoDB)</span>
+                                    <span class="text-amber-500 font-bold">80%</span>
+                                </div>
+                                <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-amber-500 to-cyber-blue rounded-full" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVICES SECTION -->
+            <section id="services" class="space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-purple">Spesialisasi</h3>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Apa yang Bisa Saya Lakukan?</h2>
+                    <p class="text-slate-600">Solusi digital menyeluruh untuk membawa ide inovatif Anda bertransformasi ke platform web modern.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-blue/10 border border-cyber-blue/20 flex items-center justify-center text-cyber-blue text-2xl">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Front-End Dev</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Membangun aplikasi web satu halaman (SPA) menggunakan arsitektur modular modern berbasis ReactJS, animasi web yang dinamis, serta desain web yang sangat responsif.
+                        </p>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-purple/10 border border-cyber-purple/20 flex items-center justify-center text-cyber-purple text-2xl">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Back-End Dev</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Merancang restful API yang aman, struktur database yang optimal, keamanan data, integrasi pihak ketiga, sistem autentikasi, serta arsitektur server yang andal.
+                        </p>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="glass-card p-8 rounded-3xl space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-pink/10 border border-cyber-pink/20 flex items-center justify-center text-cyber-pink text-2xl">
+                            <i class="fa-solid fa-compass-drafting"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">UI/UX Design</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Merancang purwarupa interaktif yang elegan, riset kegunaan pengguna, pemetaan navigasi web, gaya tipografi premium, serta jaminan keselarasan estetika.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PORTFOLIO SECTION -->
+            <section id="portfolio" class="space-y-12">
+                <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+                    <div class="space-y-3">
+                        <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-pink">Portofolio</h3>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Karya Terpilih</h2>
+                        <p class="text-slate-600 max-w-md">Eksplorasi proyek pengembangan digital komersial maupun pribadi terbaru saya.</p>
+                    </div>
+
+                    <!-- Filter buttons -->
+                    <div class="flex flex-wrap gap-2 bg-slate-200/50 p-1.5 rounded-2xl border border-slate-300/30">
+                        <button class="filter-btn px-4 py-2 rounded-xl text-sm font-bold tracking-wide bg-gradient-to-r from-cyber-blue to-cyber-indigo text-white transition-all shadow-sm" data-category="all">Semua</button>
+                        <button class="filter-btn px-4 py-2 rounded-xl text-sm font-bold tracking-wide text-slate-500 hover:text-slate-800 transition-all" data-category="web">Web App</button>
+                       
+                    </div>
+                </div>
+
+                <!-- Projects Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="portfolio-grid">
+                    <!-- Project 1 -->
+                    <div class="portfolio-item glass-card rounded-3xl overflow-hidden group border border-slate-200/50 flex flex-col" data-category="web">
+                        <div class="relative overflow-hidden aspect-video bg-slate-200 flex items-center justify-center">
+                            <img src="web hijau.png" alt="SaaS Dashboard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/060919/ffffff?text=Web+SaaS+Project';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60"></div>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <span class="px-3 py-1 rounded-lg bg-cyber-blue/10 text-cyber-blue border border-cyber-blue/20 text-xs font-bold uppercase tracking-wider">Web App</span>
+                                <h3 class="text-xl font-bold text-slate-800">Website - Lingkungan Hijau</h3>
+                                <p class="text-slate-600 text-sm">Web ini dibuat untuk meningkatkan kesadaran serta megajak masyarakat untuk berkontribusi dalam menjaga linkungan.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                                <div class="flex gap-2 text-xs text-slate-500 font-mono">
+                                    <span>React</span> • <span>Node.js</span> • <span>ChartJS</span>
+                                </div>
+                                <button onclick="openModal('NexaFlow - SaaS Analytics', 'Proyek SaaS analitik performa tinggi ini dirancang khusus untuk mempermudah bisnis memantau tren penjualan. Menggunakan integrasi Web Sockets untuk pembaruan data waktu nyata, ChartJS untuk infografis yang lancar, dan kerangka ReactJS di sisi klien. Desain dikembangkan dengan Tailwind CSS untuk fleksibilitas.', 'web')" class="text-cyber-blue font-bold text-sm hover:underline cursor-pointer">
+                                    Detail <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="portfolio-item glass-card rounded-3xl overflow-hidden group border border-slate-200/50 flex flex-col" data-category="web">
+                        <div class="relative overflow-hidden aspect-video bg-slate-200 flex items-center justify-center">
+                            <img src="web ujian.png" alt="E-Commerce Engine" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/060919/ffffff?text=E-Commerce+Project';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60"></div>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <span class="px-3 py-1 rounded-lg bg-cyber-blue/10 text-cyber-blue border border-cyber-blue/20 text-xs font-bold uppercase tracking-wider">Web App</span>
+                                <h3 class="text-xl font-bold text-slate-800">Website -  Ujian Online</h3>
+                                <p class="text-slate-600 text-sm">Web ini dibuat dengan tujuan memudahkan mahasiswa dalam melaksanakan ujian secara daring.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                                <div class="flex gap-2 text-xs text-slate-500 font-mono">
+                                    <span>NextJS</span> • <span>Stripe</span> • <span>MongoDB</span>
+                                </div>
+                                <button onclick="openModal('Lumina - E-Commerce Engine', 'Mesin belanja e-commerce multi-vendor berkinerja tinggi. Menggunakan NextJS untuk Server-Side Rendering (SSR) demi kecepatan SEO optimal, gerbang pembayaran Stripe, autentikasi terpusat JWT, dan penataan data yang dinamis menggunakan MongoDB.', 'web')" class="text-cyber-blue font-bold text-sm hover:underline cursor-pointer">
+                                    Detail <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="portfolio-item glass-card rounded-3xl overflow-hidden group border border-slate-200/50 flex flex-col" data-category="design">
+                        <div class="relative overflow-hidden aspect-video bg-slate-200 flex items-center justify-center">
+                            <img src="web klinik.png" alt="Crypto App UI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/060919/ffffff?text=UI+UX+Project';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60"></div>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <span class="px-3 py-1 rounded-lg bg-cyber-pink/10 text-cyber-pink border border-cyber-pink/20 text-xs font-bold uppercase tracking-wider">WEB APP</span>
+                                <h3 class="text-xl font-bold text-slate-800">Website - Manajemen Klinik</h3>
+                                <p class="text-slate-600 text-sm">Web ini dibuat untuk membantu mengelola oprasional klinik agar lebih cepat, rapi, dan efisien.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                                <div class="flex gap-2 text-xs text-slate-500 font-mono">
+                                    <span>Html</span> • <span>CSS</span> • <span>Javascript</span>
+                                </div>
+                                <button onclick="openModal('ApexCrypto - Mobile Wallet Design', 'Karya desain antarmuka aplikasi seluler bertema gelap. Proses riset mencakup pemetaan persona pengguna, analisis kompetitif, uji kegunaan (usability testing), dan pembuatan prototipe interaktif resolusi tinggi langsung di Figma.', 'design')" class="text-cyber-blue font-bold text-sm hover:underline cursor-pointer">
+                                    Detail <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="portfolio-item glass-card rounded-3xl overflow-hidden group border border-slate-200/50 flex flex-col" data-category="design">
+                        <div class="relative overflow-hidden aspect-video bg-slate-200 flex items-center justify-center">
+                            <img src="web konektera.png" alt="Fintech Web UI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/060919/ffffff?text=UI+UX+Web';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60"></div>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <span class="px-3 py-1 rounded-lg bg-cyber-pink/10 text-cyber-pink border border-cyber-pink/20 text-xs font-bold uppercase tracking-wider">WEB APP</span>
+                                <h3 class="text-xl font-bold text-slate-800">Website - Konektera</h3>
+                                <p class="text-slate-600 text-sm">Web ini dibuat dengan tujuan membantu pengguna mengelola dan mengurangi penggunaan media sosial agar lebih produktif dan lebih banyak melakukan interaksi di dunia nyata.</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                                <div class="flex gap-2 text-xs text-slate-500 font-mono">
+                                    <span>Html</span> • <span>CSS</span> • <span>Javascript</span>
+                                </div>
+                                <button onclick="openModal('Vaulty - Web Banking Landing Page', 'Sebuah studi kasus komprehensif dalam mengkonversi pengunjung web keuangan menjadi nasabah bank. Menampilkan integrasi micro-interactions, diagram visual interaktif, dan fokus khusus pada pemenuhan aspek kognitif psikologi warna perbankan modern.', 'design')" class="text-cyber-blue font-bold text-sm hover:underline cursor-pointer">
+                                    Detail <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EASTER EGG SECTION (MINI GAME) -->
+            <section id="cyber-game" class="space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-blue"><i class="fa-solid fa-satellite-dish mr-2 animate-pulse"></i>Developer's Challenge</h3>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Data Stream Highway</h2>
+                    <p class="text-slate-600">Pandu Cyber-Ship Anda melalui aliran data super cepat! Kumpulkan clean code dan hindari virus malware untuk memenangkan hadiah diskon proyek!</p>
+                </div>
+
+                <div class="max-w-2xl mx-auto glass p-4 sm:p-8 rounded-3xl border border-slate-200 shadow-lg space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-cyber-blue animate-ping"></span>
+                            <span class="text-xs font-mono tracking-widest text-cyber-blue" id="game-status">STATUS: READY_TO_RUN</span>
+                        </div>
+                        <div class="text-xs font-mono text-slate-700 flex gap-4 items-center">
+                            <div>Score: <span id="game-score-box" class="text-slate-900 font-bold">0</span>/100</div>
+                            <div>Shield: <span id="game-shield-box" class="text-rose-600 font-bold">★★★★★</span></div>
+                            <div class="bg-slate-200 px-2.5 py-1 rounded-lg text-slate-900 font-extrabold text-xs flex items-center gap-1">
+                                <i class="fa-regular fa-clock"></i> <span id="game-timer-box">60</span>s
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cyber Arcade Cabinet Screen Frame (Canvas rendered inline inside dark glowing frame) -->
+                    <div class="bg-slate-950 rounded-2xl p-2 border border-white/10 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
+                        
+                        <!-- Play / Start Panel Overlaid -->
+                        <div id="game-start-panel" class="absolute inset-0 bg-slate-950/90 z-20 flex flex-col items-center justify-center text-center p-6 space-y-4">
+                            <div class="text-5xl text-cyber-blue animate-bounce"><i class="fa-solid fa-shuttle-space"></i></div>
+                            <h4 class="text-xl font-extrabold text-white">DATA STREAM RUNNER v2.0</h4>
+                            <p class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+                                Kumpulkan <span class="text-emerald-400 font-bold">Hijau (+5 Poin)</span> dan hindari <span class="text-rose-500 font-bold">Merah (-5 Poin)</span>! Capai <span class="text-yellow-400 font-bold">100 Poin</span> sebelum waktu <span class="text-yellow-400 font-bold">1 Menit</span> habis. Anda memiliki <span class="text-rose-400 font-bold">5 kali batas tabrakan</span>!
+                            </p>
+                            <button id="btn-start-game" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyber-blue to-cyber-indigo text-white font-extrabold tracking-wider hover:scale-105 active:scale-95 transition-all shadow-md shadow-sky-500/20">
+                                LUNCURKAN SYSTEM
+                            </button>
+                        </div>
+
+                        <!-- Game Canvas -->
+                        <canvas id="game-canvas" class="w-full max-w-[550px] aspect-[4/3] bg-slate-950 block rounded-xl border border-white/5 cursor-crosshair"></canvas>
+
+                        <!-- Success Easter Egg Message Overlay -->
+                        <div id="game-win-panel" class="absolute inset-0 bg-slate-950/95 z-20 hidden flex flex-col items-center justify-center text-center p-6 space-y-4">
+                            <div class="text-5xl text-yellow-400 animate-pulse"><i class="fa-solid fa-gift"></i></div>
+                            <h4 class="text-xl font-bold text-white tracking-wide">AKSES DEKRIPSI TOTAL BERHASIL!</h4>
+                            <p class="text-xs text-slate-300 max-w-sm mx-auto leading-relaxed">Selamat! Anda berhasil mencapai target skor dalam waktu kurang dari 1 menit. Gunakan voucer diskon eksklusif di bawah ini:</p>
+                            
+                            <!-- Premium Cyber Voucher Coupon Visual -->
+                            <div class="relative w-full max-w-xs mx-auto bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-2 border-dashed border-emerald-500/40 p-4 rounded-2xl flex flex-col items-center justify-center overflow-hidden">
+                                <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-950 rounded-full border-r border-emerald-500/40"></div>
+                                <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-950 rounded-full border-l border-emerald-500/40"></div>
+                                <span class="text-[9px] font-mono tracking-widest text-emerald-400 font-bold">VOUCHER PROYEK WEB</span>
+                                <span class="text-4xl font-black text-white py-1">15% OFF</span>
+                                <span class="text-[10px] text-slate-400 pb-3">Berlaku untuk semua jenis proyek</span>
+                                <div class="flex items-center gap-2 bg-emerald-500/20 px-3 py-2 rounded-xl border border-emerald-500/30 w-full justify-between">
+                                    <span class="font-mono font-extrabold text-emerald-300 tracking-wider text-xs" id="promo-code-text">CYBER_REZA_15%</span>
+                                    <button onclick="copyPromoCode()" class="text-[10px] font-bold text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/20 transition-all active:scale-90"><i class="fa-solid fa-copy"></i> Salin</button>
+                                </div>
+                            </div>
+                            
+                            <button onclick="restartToMenu()" class="px-5 py-2 rounded-xl border border-slate-700 text-xs text-slate-400 hover:text-white transition-colors">Main Lagi</button>
+                        </div>
+                    </div>
+
+                    <!-- Touchscreen On-Screen Controller (Neon arrow buttons at bottom for mobile layout) -->
+                    <div class="flex justify-center gap-6 pt-2">
+                        <button id="btn-left" class="w-16 h-12 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-700 active:bg-cyber-blue active:text-white transition-all text-xl shadow-sm">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button id="btn-right" class="w-16 h-12 rounded-xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-700 active:bg-cyber-blue active:text-white transition-all text-xl shadow-sm">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Instruction Note -->
+                    <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-slate-500 flex items-start gap-3">
+                        <i class="fa-solid fa-circle-info text-cyber-blue text-sm mt-0.5"></i>
+                        <span>Gunakan gerakan seret/sentuh langsung pada Canvas siber di atas untuk kontrol mengemudi manual yang lebih luwes dan mulus di smartphone Anda!</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ ACCORDION SECTION -->
+            <section id="faq" class="space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-pink">FAQ</h3>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Pertanyaan Umum</h2>
+                    <p class="text-slate-600">Pertanyaan-pertanyaan seputar cara kerja, harga, dan proses pengembangan web.</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-4">
+                    <!-- Accordion 1 -->
+                    <div class="faq-item glass rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300">
+                        <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-800 hover:text-cyber-blue transition-colors focus:outline-none">
+                            <span>Berapa lama estimasi pengerjaan satu proyek website?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform duration-300 text-slate-500"></i>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                Waktu pengerjaan bergantung pada kompleksitas modul web Anda. Website portofolio pribadi umumnya selesai dalam waktu 3-7 hari, sedangkan portal web perusahaan atau sistem e-commerce e-dagang tingkat menengah memerlukan waktu antara 2 hingga 4 minggu.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion 2 -->
+                    <div class="faq-item glass rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300">
+                        <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-800 hover:text-cyber-blue transition-colors focus:outline-none">
+                            <span>Teknologi web apa saja yang paling sering Anda gunakan?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform duration-300 text-slate-500"></i>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                Untuk sisi tampilan (Front-end), saya utamanya menggunakan HTML5, CSS3, Tailwind CSS, JavaScript murni, dan ReactJS. Di sisi server (Back-end), saya mengandalkan NodeJS dengan ExpressJS atau bahasa pemrograman PHP murni maupun berbasis Laravel. Serta basis data MySQL dan MongoDB.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion 3 -->
+                    <div class="faq-item glass rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300">
+                        <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-800 hover:text-cyber-blue transition-colors focus:outline-none">
+                            <span>Apakah website buatan Anda ramah SEO dan mudah diakses di HP?</span>
+                            <i class="fa-solid fa-chevron-down transition-transform duration-300 text-slate-500"></i>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-sm sm:text-base text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                Ya, mutlak. Setiap baris kode yang saya bangun ditulis dengan optimasi SEO tinggi serta menggunakan teknik grid responsif fluid modern. Ini menjamin tampilan website Anda selalu tampil prima, proporsional, dan sangat cepat saat dimuat di berbagai jenis gawai seluler, tablet, maupun layar desktop beresolusi tinggi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT SECTION -->
+            <section id="contact" class="space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <h3 class="text-xs uppercase font-extrabold tracking-widest text-cyber-blue">Kontak</h3>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Hubungi Saya Sekarang</h2>
+                    <p class="text-slate-600">Punya proyek menarik atau sekedar ingin menyapa? Kirimkan pesan di bawah ini!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
+                    <!-- Contact Cards -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Card 1 -->
+                        <div class="glass p-6 rounded-3xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyber-blue/10 border border-cyber-blue/20 flex items-center justify-center text-cyber-blue text-xl">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-extrabold">E-mail Resmi</h4>
+                                <p class="text-slate-800 font-bold text-sm sm:text-base">saifiburoq0525@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="glass p-6 rounded-3xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyber-purple/10 border border-cyber-purple/20 flex items-center justify-center text-cyber-purple text-xl">
+                                <i class="fa-solid fa-mobile-retro"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-extrabold">Telepon / WhatsApp</h4>
+                                <p class="text-slate-800 font-bold text-sm sm:text-base">+62 813-9834-7985</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="glass p-6 rounded-3xl flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyber-pink/10 border border-cyber-pink/20 flex items-center justify-center text-cyber-pink text-xl">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-extrabold">Lokasi</h4>
+                                <p class="text-slate-800 font-bold text-sm sm:text-base">Tanggerang Selatan, Indonesia</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Box -->
+                    <div class="lg:col-span-3 glass p-8 rounded-3xl border border-slate-200 relative">
+                        <form id="portfolio-contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Nama Lengkap</label>
+                                    <input type="text" id="form-name" required placeholder="Masukkan nama..." class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyber-indigo transition-all text-sm shadow-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Alamat E-mail</label>
+                                    <input type="email" id="form-email" required placeholder="name@email.com" class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyber-indigo transition-all text-sm shadow-sm">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Subjek Pesan</label>
+                                <input type="text" id="form-subject" required placeholder="Topik diskusi..." class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyber-indigo transition-all text-sm shadow-sm">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Detail Pesan</label>
+                                <textarea id="form-message" required rows="4" placeholder="Tulis rincian proyek atau pertanyaan Anda di sini..." class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyber-indigo transition-all text-sm shadow-sm"></textarea>
+                            </div>
+                            
+                            <!-- Custom feedback toast inside the card -->
+                            <div id="form-feedback" class="hidden p-4 rounded-xl text-sm font-semibold flex items-center gap-3 animate-fade-in"></div>
+
+                            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyber-blue via-cyber-purple to-cyber-pink text-white font-extrabold tracking-wider shadow-md hover:shadow-sky-500/15 hover:translate-y-[-1px] transition-all transform active:scale-[0.98]">
+                                Kirim Pesan <i class="fa-regular fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer area -->
+        <footer class="w-full border-t border-slate-200 bg-slate-100/80 py-10 mt-24">
+            <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Branding left -->
+                <div class="text-center md:text-left space-y-2">
+                    <h4 class="text-slate-800 font-extrabold text-lg tracking-wider">SAIFI<span class="text-cyber-blue">BUROQ</span></h4>
+                    <p class="text-xs text-slate-500">© 2026 Saifi Buroq. Semua Hak Dilindungi Undang-Undang.</p>
+                </div>
+
+                <!-- Socials center -->
+                <div class="flex items-center gap-4">
+                    <a href="#" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-cyber-blue/10 hover:text-cyber-blue flex items-center justify-center text-slate-500 hover:border-cyber-blue/30 shadow-sm transition-all text-lg"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-cyber-blue/10 hover:text-cyber-blue flex items-center justify-center text-slate-500 hover:border-cyber-blue/30 shadow-sm transition-all text-lg"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:bg-cyber-blue/10 hover:text-cyber-blue flex items-center justify-center text-slate-500 hover:border-cyber-blue/30 shadow-sm transition-all text-lg"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- PORTFOLIO ITEM DETAILED MODAL -->
+    <div id="project-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <!-- Overlay backdrop -->
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeModal()"></div>
+        <!-- Modal body -->
+        <div class="glass relative z-10 w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-2xl space-y-6">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl focus:outline-none">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="space-y-4 text-left">
+                <div class="inline-block" id="modal-badge-container"></div>
+                <h3 id="modal-title" class="text-2xl font-extrabold text-slate-900">Project Title</h3>
+                <p id="modal-desc" class="text-slate-600 text-sm sm:text-base leading-relaxed">Detailed project explanation goes here...</p>
+            </div>
+            <div class="flex items-center gap-4 pt-4 border-t border-slate-100">
+                <a href="#" onclick="event.preventDefault(); alert('Demo ini disimulasikan sebagai tautan eksternal.')" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyber-blue text-white tracking-wider hover:opacity-90 transition-opacity">Kunjungi Situs</a>
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition-colors">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYSTEM LOGIC JAVASCRIPT -->
+    <script>
+        // --- Plexus Particle Canvas ---
+        const canvas = document.getElementById('interactive-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mousePosition = { x: null, y: null };
+
+        // Handle Resize
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        // Particle Blueprint
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Border Bounce
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(37, 99, 235, 0.45)';
+                ctx.fill();
+            }
+        }
+
+        // Init Particles
+        function initParticles() {
+            particles = [];
+            const count = Math.min(60, Math.floor((canvas.width * canvas.height) / 18000));
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // Draw connecting lines (Plexus effect)
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(37, 99, 235, ${0.15 - dist / 120 * 0.15})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation Loop
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animateCanvas);
+        }
+
+        // Track Mouse Movements for connection lines
+        window.addEventListener('mousemove', (e) => {
+            mousePosition.x = e.clientX;
+            mousePosition.y = e.clientY;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mousePosition.x = null;
+            mousePosition.y = null;
+        });
+
+        // Initialize Canvas
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            animateCanvas();
+        });
+        window.addEventListener('resize', resizeCanvas);
+
+
+        // --- Typed Title Hero Animation ---
+        const words = ["Full-Stack Developer", "UI/UX Designer", "Website Architect"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 100;
+        const targetElement = document.getElementById('typing-text');
+
+        function type() {
+            const currentWord = words[wordIndex];
+            if (isDeleting) {
+                targetElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                targetElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let delta = typingSpeed;
+            if (isDeleting) delta /= 2;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                delta = 2000; // Hold at full word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                delta = 500; // Pause before next word
+            }
+
+            setTimeout(type, delta);
+        }
+        type();
+
+
+        // --- Filterable Portfolio Engine ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active styling
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-gradient-to-r', 'from-cyber-blue', 'to-cyber-indigo', 'text-white', 'shadow-sm');
+                    b.classList.add('text-slate-500');
+                });
+                // Add active styling
+                btn.classList.add('bg-gradient-to-r', 'from-cyber-blue', 'to-cyber-indigo', 'text-white', 'shadow-sm');
+                btn.classList.remove('text-slate-500');
+
+                const targetCategory = btn.getAttribute('data-category');
+
+                portfolioItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+                    if (targetCategory === 'all' || itemCategory === targetCategory) {
+                        item.style.display = 'flex';
+                        setTimeout(() => { item.style.opacity = '1'; }, 50);
+                    } else {
+                        item.style.opacity = '0';
+                        setTimeout(() => { item.style.display = 'none'; }, 300);
+                    }
+                });
+            });
+        });
+
+
+        // --- FAQ Accordion Engine ---
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const parent = toggle.parentElement;
+                const content = parent.querySelector('.faq-content');
+                const chevron = toggle.querySelector('i');
+
+                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                    content.style.maxHeight = '0px';
+                    chevron.style.transform = 'rotate(0deg)';
+                } else {
+                    // Close other active FAQs
+                    document.querySelectorAll('.faq-content').forEach(c => c.style.maxHeight = '0px');
+                    document.querySelectorAll('.faq-toggle i').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    chevron.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+
+        // --- Cyber Arcade Game: DATA STREAM RUNNER ---
+        const gCanvas = document.getElementById('game-canvas');
+        const gCtx = gCanvas.getContext('2d');
+        const startPanel = document.getElementById('game-start-panel');
+        const winPanel = document.getElementById('game-win-panel');
+        const btnStart = document.getElementById('btn-start-game');
+        const gameStatusText = document.getElementById('game-status');
+        const scoreBox = document.getElementById('game-score-box');
+        const shieldBox = document.getElementById('game-shield-box');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+
+        // Internal logical game screen dimensions (Scaled to fit responsive elements)
+        const GW = 600;
+        const GH = 450;
+        gCanvas.width = GW;
+        gCanvas.height = GH;
+
+        let gameRunning = false;
+        let score = 0;
+        let shields = 5; // Updated from 3 to 5
+        let timeLeft = 60; // Max duration 1 minute (60 seconds)
+        let timerInterval = null; // Timer control container
+        let playerX = GW / 2;
+        const playerY = GH - 50;
+        const playerRadius = 15;
+        let keys = {};
+        
+        let obstacles = [];
+        let dataPackets = [];
+        let particlesPool = [];
+        let gridOffset = 0;
+        const baseSpeed = 4;
+        let currentSpeed = baseSpeed;
+
+        btnStart.addEventListener('click', startCyberGame);
+
+        // Track Keyboard Controls
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Mouse/Touch Drag Controls Directly on Canvas
+        function getCanvasMousePos(evt) {
+            const rect = gCanvas.getBoundingClientRect();
+            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            // Scale appropriately based on bounding box
+            const relativeX = (clientX - rect.left) / rect.width;
+            return relativeX * GW;
+        }
+
+        function handlePointerMove(e) {
+            if (!gameRunning) return;
+            e.preventDefault();
+            const targetX = getCanvasMousePos(e);
+            if (targetX >= playerRadius && targetX <= GW - playerRadius) {
+                playerX = targetX;
+            }
+        }
+
+        gCanvas.addEventListener('mousemove', handlePointerMove);
+        gCanvas.addEventListener('touchmove', handlePointerMove, { passive: false });
+        gCanvas.addEventListener('touchstart', handlePointerMove, { passive: false });
+
+        // Touch Control Buttons Visual
+        btnLeft.addEventListener('pointerdown', () => { keys['ArrowLeft'] = true; });
+        btnLeft.addEventListener('pointerup', () => { keys['ArrowLeft'] = false; });
+        btnLeft.addEventListener('pointerleave', () => { keys['ArrowLeft'] = false; });
+        btnRight.addEventListener('pointerdown', () => { keys['ArrowRight'] = true; });
+        btnRight.addEventListener('pointerup', () => { keys['ArrowRight'] = false; });
+        btnRight.addEventListener('pointerleave', () => { keys['ArrowRight'] = false; });
+
+        function startCyberGame() {
+            startPanel.classList.add('hidden');
+            winPanel.classList.add('hidden');
+            score = 0;
+            shields = 5; // Reset starting lives to 5
+            timeLeft = 60; // Reset time limit to 60 seconds
+            obstacles = [];
+            dataPackets = [];
+            particlesPool = [];
+            currentSpeed = baseSpeed;
+            updateGameStats();
+            
+            // Handle countdown timer system
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (gameRunning) {
+                    timeLeft--;
+                    document.getElementById('game-timer-box').textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        gameOver(true); // Game over with timeout status
+                    }
+                }
+            }, 1000);
+            
+            gameRunning = true;
+            gameStatusText.textContent = "STATUS: ONLINE_RUNNER";
+            gameStatusText.className = "text-xs font-mono tracking-widest text-emerald-500";
+            
+            animateGameLoop();
+        }
+
+        function updateGameStats() {
+            scoreBox.textContent = score;
+            let shieldsStr = "";
+            for(let i=0; i<5; i++) {
+                shieldsStr += (i < shields) ? "★" : "☆";
+            }
+            shieldBox.textContent = shieldsStr;
+            document.getElementById('game-timer-box').textContent = timeLeft;
+            if (shields <= 2) shieldBox.className = "text-rose-600 animate-pulse font-bold";
+            else shieldBox.className = "text-rose-600 font-bold";
+        }
+
+        function spawnEntities() {
+            // Spawn Collectible Data Packets
+            if (Math.random() < 0.035 && dataPackets.length < 5) {
+                dataPackets.push({
+                    x: playerRadius + Math.random() * (GW - playerRadius * 2),
+                    y: -20,
+                    size: 8 + Math.random() * 6,
+                    color: '#10b981', // Emerald Code Green
+                    type: 'code',
+                    pulse: 0
+                });
+            }
+
+            // Spawn Obstacles (Malware/Virus)
+            if (Math.random() < 0.045 && obstacles.length < 8) {
+                obstacles.push({
+                    x: playerRadius + Math.random() * (GW - playerRadius * 2),
+                    y: -20,
+                    width: 15 + Math.random() * 20,
+                    height: 15 + Math.random() * 20,
+                    color: '#db2777', // Glowing Pink/Red
+                    speedY: currentSpeed * (0.8 + Math.random() * 0.5)
+                });
+            }
+        }
+
+        // Cyber sparks visual impact particles
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 15; i++) {
+                particlesPool.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    radius: Math.random() * 3 + 1,
+                    alpha: 1,
+                    color: color
+                });
+            }
+        }
+
+        function gameOver(isTimeout = false) {
+            gameRunning = false;
+            if (timerInterval) clearInterval(timerInterval);
+            gameStatusText.textContent = isTimeout ? "STATUS: TIME_OUT" : "STATUS: ENCRYPTION_FAILED";
+            gameStatusText.className = "text-xs font-mono tracking-widest text-rose-500";
+            startPanel.classList.remove('hidden');
+            btnStart.textContent = isTimeout ? "WAKTU HABIS! MAIN LAGI" : "COBA LAGI";
+        }
+
+        function gameWin() {
+            gameRunning = false;
+            if (timerInterval) clearInterval(timerInterval);
+            gameStatusText.textContent = "STATUS: SYSTEM_DECRYPTED";
+            gameStatusText.className = "text-xs font-mono tracking-widest text-emerald-500";
+            winPanel.classList.remove('hidden');
+        }
+
+        function restartToMenu() {
+            winPanel.classList.add('hidden');
+            startPanel.classList.remove('hidden');
+            btnStart.textContent = "MAIN LAGI";
+        }
+
+        // --- Core Arcade Canvas Render Pipeline ---
+        function animateGameLoop() {
+            if (!gameRunning) return;
+
+            gCtx.clearRect(0, 0, GW, GH);
+
+            // 1. Draw pseudo-3D cyber scrolling road grid
+            gridOffset = (gridOffset + currentSpeed) % 40;
+            gCtx.strokeStyle = 'rgba(2, 132, 199, 0.08)';
+            gCtx.lineWidth = 1.5;
+            
+            // Draw horizontal lines scrolling down
+            for (let y = gridOffset; y < GH; y += 40) {
+                gCtx.beginPath();
+                gCtx.moveTo(0, y);
+                gCtx.lineTo(GW, y);
+                gCtx.stroke();
+            }
+            // Draw perspective vertical lines
+            for (let x = -200; x < GW + 200; x += 60) {
+                gCtx.beginPath();
+                gCtx.moveTo(x, 0);
+                gCtx.lineTo(x + (x - GW/2) * 0.5, GH);
+                gCtx.stroke();
+            }
+
+            // 2. Keyboard Control Updates (Fallback)
+            const pSpeed = 7;
+            if ((keys['ArrowLeft'] || keys['a'] || keys['A']) && playerX > playerRadius) {
+                playerX -= pSpeed;
+            }
+            if ((keys['ArrowRight'] || keys['d'] || keys['D']) && playerX < GW - playerRadius) {
+                playerX += pSpeed;
+            }
+
+            // 3. Spawn Items
+            spawnEntities();
+
+            // 4. Update & Draw Collectibles
+            for (let i = dataPackets.length - 1; i >= 0; i--) {
+                const item = dataPackets[i];
+                item.y += currentSpeed * 0.9;
+                item.pulse += 0.1;
+                
+                // Draw glowing node
+                const glowSize = item.size + Math.sin(item.pulse) * 3;
+                gCtx.save();
+                gCtx.shadowBlur = 15;
+                gCtx.shadowColor = item.color;
+                gCtx.fillStyle = item.color;
+                gCtx.beginPath();
+                // Rounded tech diamond shape
+                gCtx.moveTo(item.x, item.y - glowSize);
+                gCtx.lineTo(item.x + glowSize, item.y);
+                gCtx.lineTo(item.x, item.y + glowSize);
+                gCtx.lineTo(item.x - glowSize, item.y);
+                gCtx.closePath();
+                gCtx.fill();
+                gCtx.restore();
+
+                // Collision Check
+                const distY = Math.abs(item.y - playerY);
+                const distX = Math.abs(item.x - playerX);
+                if (distX < playerRadius + item.size && distY < playerRadius + item.size) {
+                    createExplosion(item.x, item.y, '#10b981');
+                    score += 5; // Updated to +5 points
+                    currentSpeed += 0.15; // Slightly speed up
+                    dataPackets.splice(i, 1);
+                    updateGameStats();
+                    
+                    if (score >= 100) {
+                        gameWin();
+                    }
+                    continue;
+                }
+
+                // Delete if out of bounds
+                if (item.y > GH + 20) {
+                    dataPackets.splice(i, 1);
+                }
+            }
+
+            // 5. Update & Draw Malware Obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.y += obs.speedY;
+
+                // Draw glowing angular spikes/hexagons
+                gCtx.save();
+                gCtx.shadowBlur = 10;
+                gCtx.shadowColor = obs.color;
+                gCtx.fillStyle = obs.color;
+                gCtx.beginPath();
+                gCtx.arc(obs.x, obs.y, obs.width/2, 0, Math.PI * 2);
+                gCtx.fill();
+                
+                // Add spikes design
+                gCtx.strokeStyle = '#ffffff';
+                gCtx.lineWidth = 2;
+                gCtx.stroke();
+                gCtx.restore();
+
+                // Collision Check
+                const distY = Math.abs(obs.y - playerY);
+                const distX = Math.abs(obs.x - playerX);
+                const collDist = playerRadius + (obs.width / 2);
+                
+                if (distX < collDist && distY < collDist) {
+                    createExplosion(obs.x, obs.y, '#db2777');
+                    shields--;
+                    score = Math.max(0, score - 5); // Subtracts 5 points on hit, but never below 0
+                    obstacles.splice(i, 1);
+                    updateGameStats();
+
+                    if (shields <= 0) {
+                        gameOver();
+                    }
+                    continue;
+                }
+
+                // Delete if out of bounds
+                if (obs.y > GH + 20) {
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            // 6. Update & Draw Particles Pool
+            for (let i = particlesPool.length - 1; i >= 0; i--) {
+                const p = particlesPool[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.02;
+                if (p.alpha <= 0) {
+                    particlesPool.splice(i, 1);
+                    continue;
+                }
+                gCtx.fillStyle = p.color;
+                gCtx.globalAlpha = p.alpha;
+                gCtx.beginPath();
+                gCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                gCtx.fill();
+            }
+            gCtx.globalAlpha = 1.0; // Reset alpha
+
+            // 7. Draw Player Cyan Cyber-Ship
+            gCtx.save();
+            gCtx.shadowBlur = 20;
+            gCtx.shadowColor = '#0284c7';
+            gCtx.fillStyle = '#0284c7'; // Pure Cyber Blue
+            
+            // Neon glowing triangle spacecraft
+            gCtx.beginPath();
+            gCtx.moveTo(playerX, playerY - 18);
+            gCtx.lineTo(playerX - 16, playerY + 16);
+            gCtx.lineTo(playerX, playerY + 8); // Engine nozzle indentation
+            gCtx.lineTo(playerX + 16, playerY + 16);
+            gCtx.closePath();
+            gCtx.fill();
+
+            // Inner Core Ship Light
+            gCtx.fillStyle = '#ffffff';
+            gCtx.beginPath();
+            gCtx.moveTo(playerX, playerY - 10);
+            gCtx.lineTo(playerX - 8, playerY + 10);
+            gCtx.lineTo(playerX, playerY + 5);
+            gCtx.lineTo(playerX + 8, playerY + 10);
+            gCtx.closePath();
+            gCtx.fill();
+            gCtx.restore();
+
+            requestAnimationFrame(animateGameLoop);
+        }
+
+
+        // --- Contact Form Submission Handling ---
+        const contactForm = document.getElementById('portfolio-contact-form');
+        const feedbackDiv = document.getElementById('form-feedback');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+
+            if (name.trim() === "" || email.trim() === "") {
+                feedbackDiv.className = "p-4 rounded-xl text-sm font-semibold flex items-center gap-3 bg-rose-500/10 border border-rose-500/20 text-rose-600";
+                feedbackDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Harap isi semua kolom wajib!';
+                feedbackDiv.classList.remove('hidden');
+                return;
+            }
+
+            feedbackDiv.className = "p-4 rounded-xl text-sm font-semibold flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600";
+            feedbackDiv.innerHTML = '<i class="fa-solid fa-satellite-dish animate-ping"></i> Mentransmisikan pesan ke sistem satelit Reza... Sukses terkirim!';
+            feedbackDiv.classList.remove('hidden');
+
+            contactForm.reset();
+
+            setTimeout(() => {
+                feedbackDiv.classList.add('hidden');
+            }, 6000);
+        });
+
+
+        // --- Detail Modal Portfolio Popups ---
+        const modal = document.getElementById('project-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalBadgeContainer = document.getElementById('modal-badge-container');
+
+        function openModal(title, desc, category) {
+            modalTitle.textContent = title;
+            modalDesc.textContent = desc;
+
+            if (category === 'web') {
+                modalBadgeContainer.innerHTML = '<span class="px-3 py-1 rounded-lg bg-cyber-blue/10 text-cyber-blue border border-cyber-blue/20 text-xs font-bold uppercase tracking-wider">Web App</span>';
+            } else if (category === 'design') {
+                modalBadgeContainer.innerHTML = '<span class="px-3 py-1 rounded-lg bg-cyber-pink/10 text-cyber-pink border border-cyber-pink/20 text-xs font-bold uppercase tracking-wider">UI/UX</span>';
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function copyPromoCode() {
+            const promoText = document.getElementById('promo-code-text').innerText;
+            
+            // Fallback copy implementation due to iframe context
+            const el = document.createElement('textarea');
+            el.value = promoText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const feedback = document.getElementById('form-feedback');
+            feedback.className = "p-4 rounded-xl text-sm font-semibold flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600";
+            feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Kode Promo siber berhasil disalin!';
+            feedback.classList.remove('hidden');
+            setTimeout(() => feedback.classList.add('hidden'), 3000);
+        }
+    </script>
+</body>
+</html>
